@@ -21,6 +21,10 @@
 		case "REDIRECT":
 			redirectService();
 			break;
+
+		case "REGISTER":
+			registerService();
+			break;
 		
 		default:
 			# code...
@@ -386,7 +390,7 @@
 
 		echo json_encode($response);
 	}
-	# REWRITE
+	
 	function registerService() {
 
 		$uName = $_POST["uName"];
@@ -394,8 +398,6 @@
 		$fName = $_POST["fName"];
 		$lName = $_POST["lName"];
 		$email = $_POST["email"];
-		$gender = $_POST["gender"];
-		$country = $_POST["country"];
 
 		# Verify that desired username doesn't exists
 		$verificationOutcome = verifyUserExistence($uName);
@@ -406,7 +408,7 @@
 			$pass_enc = getEncryptedPassword($uPassword);
 
 			# Attempt to create new user
-			$newUserOutcome = attemptCreateUser($uName, $pass_enc, $fName, $lName, $email, $country, $gender);
+			$newUserOutcome = attemptCreateUser($uName, $pass_enc, $fName, $lName, $email);
 
 			if($newUserOutcome["MESSAGE"] == "SUCCESS") {
 

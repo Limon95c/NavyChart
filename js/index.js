@@ -18,6 +18,8 @@ $.ajax({
 	}
 });
 
+/*
+
 // Set remembered username (if cookie is set) in username textbox
 $.ajax({
 	url: "./data/applicationLayer.php",
@@ -34,48 +36,38 @@ $.ajax({
 		alert(errorMessage.statusText);
 	}
 });
-
+*/
 // Click actions login
-ButtonLogin.click(function() {
-	var valid = true;
+$(document).on('click', "#signIn_button", function() {
 
-	for(var i = 0; i < 2; i++) {
-		if(validateLogin.eq(i).val() == "") {
-			alertsLogin.eq(i).show();
-			valid = false;
-		}
-		else {
-			alertsLogin.eq(i).hide();
-		}
+	var user = $("#username");
+	var password = $("#password");
+
+	if(user.val() != "" && password.val() != "") {
+		$.ajax({
+			url : "./data/applicationLayer.php",
+			type : "POST",
+			data : {
+						"uName" : user.val(),
+						"uPassword" : password.val(),
+						"action" : "LOGIN"
+					},
+			ContentType : "application/json",
+			dataType : "json",
+			success: function(dataReceived) {
+				$(location).attr("href", "home.html");
+			},
+			error : function(errorMessage) {
+				alert(errorMessage.statusText);
+			}
+		});
 	}
-
-	if(valid) {
-
-		var remember = $("input[name='remember']").prop('checked');
-
-		if(user.val() != "" && password.val() != "") {
-			$.ajax({
-				url : "./data/applicationLayer.php",
-				type : "POST",
-				data : {
-							"uName" : user.val(),
-							"uPassword" : password.val(),
-							"remember" : remember,
-							"action" : "LOGIN"
-						},
-				ContentType : "application/json",
-				dataType : "json",
-				success: function(dataReceived) {
-					$(location).attr("href", "home.html");
-				},
-				error : function(errorMessage) {
-					alert(errorMessage.statusText);
-				}
-			});
-		}
+	else {
+		alert("Remember to fill your information first!");
 	}
 });
 
+/*
 // Click actions register
 ButtonRegister.click(function(){
 	var valid = true;
@@ -155,3 +147,5 @@ ButtonRegister.click(function(){
 		});
 	}
 });
+
+*/

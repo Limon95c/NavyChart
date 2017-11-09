@@ -7,7 +7,7 @@
 		$servername = "localhost";
 		$username = "root";
 		$password = "root";
-		$dbname = "thejammer";
+		$dbname = "navychart";
 
 		# Obtain connection reference or null (if it failed)
 		$conn = new mysqli($servername, $username, $password, $dbname);
@@ -175,7 +175,6 @@
 		}
 	}
 
-	# REWRITE
 	# Attempt to login function
 	function fetchloginInfo($userName) {
 		# Obtain null or actual reference of connection

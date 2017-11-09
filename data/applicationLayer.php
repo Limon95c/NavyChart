@@ -9,25 +9,6 @@
 
 	# Action filtering
 	switch ($action) {
-		case "ANSWER_FRIEND_REQUEST":
-			answerFriendRequestService();
-			break;
-
-		case "COMMENTS":
-			commentsService();
-			break;
-
-		case "FILL_FRIEND_LIST":
-			fillFriendListService();
-			break;
-
-		case "FILL_FRIEND_REQUESTS":
-			fillFriendRequestService();
-			break;
-
-		case "FILL_TEXTBOX_REMEMBER_USERNAME":
-			fillTextboxRememberUsernameService();
-			break;
 
 		case "LOGIN":
 			loginService();
@@ -37,28 +18,8 @@
 			logoutService();
 			break;
 
-		case "NEW COMMENT":
-			newCommentService();
-			break;
-
-		case "PROFILE":
-			profileService();
-			break;
-
 		case "REDIRECT":
 			redirectService();
-			break;
-
-		case "REGISTER":
-			registerService();
-			break;
-
-		case "SEARCH_FRIEND":
-			searchFriendService();
-			break;
-
-		case "SEND_FRIEND_REQUEST":
-			sendFriendRequestService();
 			break;
 		
 		default:
@@ -86,7 +47,7 @@
 		}
 	}
 
-	# Encryption function REWRITE
+	# Encryption function
 	function getEncryptedPassword($password) {
 		# For encryption purposes
 		$key = pack('H*', "B374A26A71490437AA024E4FADD5B497FDFF1A8EA6FF12F6FB65AF2720B59CCF");
@@ -98,7 +59,7 @@
 	    return $password_enc;
 	}
 
-	# Decryption function REWRITE
+	# Decryption function
 	function getDecryptedPassword($encryptedPassword) {
 		# For decryption purposes
 		$key = pack('H*', "B374A26A71490437AA024E4FADD5B497FDFF1A8EA6FF12F6FB65AF2720B59CCF");
@@ -278,13 +239,12 @@
 
 		echo json_encode($response);
 	}
-	# REWRITE
+	
 	function loginService() {
 
 		# Fetch data in local variables
 		$uName = $_POST["uName"];
 		$uPassword = $_POST["uPassword"];
-		$remember = $_POST["remember"];
 
 		# Launch data layer execution attempt
 		$fetchloginInfoOutcome = fetchloginInfo($uName);
@@ -296,10 +256,6 @@
 			$pass_dec = getDecryptedPassword($fetchloginInfoOutcome["PASS_ENC"]);
 
 			if($pass_dec === $uPassword) {
-				# Update cookie if needed
-				if($remember === "true") {
-					setcookie("remember", $uName, time() + 2592000, "/", "", 0);
-				}
 
 				# Start and set session variables
 				session_start();
@@ -320,7 +276,7 @@
 			genericErrorFunction($fetchloginInfoOutcome["MESSAGE"]);
 		}
 	}
-	# REWRITE
+	
 	function logoutService() {
 		session_start();
 		unset($_SESSION['current']);
@@ -401,7 +357,7 @@
 			echo json_encode($response);
 		}
 	}
-	# REWRITE
+	
 	function redirectService() {
 
 		$context = $_POST["context"];

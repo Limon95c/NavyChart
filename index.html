@@ -32,9 +32,9 @@
                             <li><a href="#Features">Features</a></li>
                             <li><a href="#SignUp">Sign Up</a></li>
                             <li><a href="#Contact">Contact</a></li>
-                            <li><input type="text" name="username" placeholder="Username"></li>
-                            <li><input type="password" name="password" placeholder="Password"></li>
-                            <li><input class="button secondary" type="submit" name="login" value="Sign In"></li>
+                            <li><input id="username" type="text" name="username" placeholder="Username"></li>
+                            <li><input id="password" type="password" name="password" placeholder="Password"></li>
+                            <li><input id="signIn_button" class="button secondary" type="submit" name="login" value="Sign In"></li>
                         </ul>
                     </div>
                 </div>
@@ -90,35 +90,42 @@
                         <span class="input-group-label">
                             <i class="fa material-icons"aria-hidden="true">account_circle</i>
                         </span>
-                        <input class="input-group-field" type="text" placeholder="Username">
+                        <input id="newUser" class="input-group-field" type="text" placeholder="Username">
                     </div>
 
                     <div class="input-group">
                         <span class="input-group-label">
                             <i class="fa material-icons"aria-hidden="true">account_circle</i>
                         </span>
-                        <input class="input-group-field" type="text" placeholder="Full name">
+                        <input id="newFirst" class="input-group-field" type="text" placeholder="First Name">
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-label">
+                            <i class="fa material-icons"aria-hidden="true">account_circle</i>
+                        </span>
+                        <input id="newLast" class="input-group-field" type="text" placeholder="Last Name">
                     </div>
 
                     <div class="input-group">
                         <span class="input-group-label">
                             <i class="fa material-icons"aria-hidden="true">email</i>
                         </span>
-                        <input class="input-group-field" type="text" placeholder="Email">
+                        <input id="newEmail" class="input-group-field" type="text" placeholder="Email">
                     </div>
 
                     <div class="input-group">
                         <span class="input-group-label">
                             <i class="fa material-icons"aria-hidden="true">vpn_key</i>
                         </span>
-                        <input class="input-group-field" type="text" placeholder="Password">
+                        <input id="newPass" class="input-group-field" type="text" placeholder="Password">
                     </div>
 
                     <div class="input-group">
                         <span class="input-group-label">
                             <i class="fa material-icons"aria-hidden="true">vpn_key</i>
                         </span>
-                        <input class="input-group-field" type="text" placeholder="Confirm Password">
+                        <input id="confirmPass" class="input-group-field" type="text" placeholder="Confirm Password">
                     </div>
 
                     <button class="button expanded">Sign Up</button>

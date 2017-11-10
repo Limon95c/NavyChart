@@ -7,7 +7,7 @@
 		$servername = "localhost";
 		$username = "root";
 		$password = "root";
-		$dbname = "thejammer";
+		$dbname = "navychart";
 
 		# Obtain connection reference or null (if it failed)
 		$conn = new mysqli($servername, $username, $password, $dbname);
@@ -63,9 +63,8 @@
 		}
 	}
 
-	# REWRITE
 	# Attempt to create new user function
-	function attemptCreateUser($uName, $uPassword, $fName, $lName, $email, $country, $gender) {
+	function attemptCreateUser($uName, $uPassword, $fName, $lName, $email) {
 
 		# Obtain null or actual reference of connection
 		$connection = databaseConnection();
@@ -74,8 +73,8 @@
 		if($connection != null) {
 
 			# Query forumlation
-			$sql = "INSERT INTO Users(username, passwrd, fName, lName, email, country, gender)
-					VALUES ('$uName', '$uPassword', '$fName', '$lName', '$email', '$country', '$gender')";
+			$sql = "INSERT INTO Users(username, passwrd, fName, lName, email)
+					VALUES ('$uName', '$uPassword', '$fName', '$lName', '$email')";
 
 			# Query execution
 			$userCreated = $connection -> query($sql);
@@ -175,7 +174,6 @@
 		}
 	}
 
-	# REWRITE
 	# Attempt to login function
 	function fetchloginInfo($userName) {
 		# Obtain null or actual reference of connection
@@ -435,7 +433,6 @@
 		}
 	}
 
-	# REWRITE
 	# Get user's id in the database
 	function getUserID($uName) {
 		# Obtain null or actual reference of connection
@@ -476,7 +473,6 @@
 		}
 	}
 
-	# REWRITE
 	# Verify that a user exists
 	function verifyUserExistence($uName) {
 		# Obtain null or actual reference of connection

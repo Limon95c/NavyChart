@@ -18,6 +18,8 @@ $.ajax({
 	}
 });
 
+/*
+
 // Set remembered username (if cookie is set) in username textbox
 $.ajax({
 	url: "./data/applicationLayer.php",
@@ -34,100 +36,66 @@ $.ajax({
 		alert(errorMessage.statusText);
 	}
 });
-
+*/
 // Click actions login
-ButtonLogin.click(function() {
-	var valid = true;
+$(document).on('click', "#signIn_button", function() {
 
-	for(var i = 0; i < 2; i++) {
-		if(validateLogin.eq(i).val() == "") {
-			alertsLogin.eq(i).show();
-			valid = false;
-		}
-		else {
-			alertsLogin.eq(i).hide();
-		}
+	var user = $("#username");
+	var password = $("#password");
+
+	if(user.val() != "" && password.val() != "") {
+		$.ajax({
+			url : "./data/applicationLayer.php",
+			type : "POST",
+			data : {
+						"uName" : user.val(),
+						"uPassword" : password.val(),
+						"action" : "LOGIN"
+					},
+			ContentType : "application/json",
+			dataType : "json",
+			success: function(dataReceived) {
+				$(location).attr("href", "home.html");
+			},
+			error : function(errorMessage) {
+				alert(errorMessage.statusText);
+			}
+		});
 	}
-
-	if(valid) {
-
-		var remember = $("input[name='remember']").prop('checked');
-
-		if(user.val() != "" && password.val() != "") {
-			$.ajax({
-				url : "./data/applicationLayer.php",
-				type : "POST",
-				data : {
-							"uName" : user.val(),
-							"uPassword" : password.val(),
-							"remember" : remember,
-							"action" : "LOGIN"
-						},
-				ContentType : "application/json",
-				dataType : "json",
-				success: function(dataReceived) {
-					$(location).attr("href", "home.html");
-				},
-				error : function(errorMessage) {
-					alert(errorMessage.statusText);
-				}
-			});
-		}
+	else {
+		alert("Remember to fill your information first!");
 	}
 });
 
 // Click actions register
-ButtonRegister.click(function(){
+$(document).on('click', "#register_button", function() {
+
+	var user = $("#newUser");
+	var first = $("#newFirst");
+	var last = $("#newLast");
+	var email = $("#newEmail");
+	var password = $("#newPass");
+	var confirm = $("#confirmPass");
+
+	var validRegister = $(".registerElement");
 	var valid = true;
 
 	// Revisar si los campos estan vacíos
-	for(var i = 0; i < 8; i++) {
-		switch (i) {
-			case 2:
-				//Radio buttons de gender
-				if(!$("input[name='gender']:checked").val()) {
-					$("#alertGender").show();
-					valid = false;
-				}
-				else {
-					$("#alertGender").hide();
-				}
-				break;
-			case 3:
-				// Select de country
-				if($("#country").prop("selectedIndex") == 0) {
-					$("#alertCountry").show();
-					valid = false;
-				}
-				else {
-					$("#alertCountry").hide();
-				}
-				break;
-			default:
-				if(validateRegister.eq(i).val() == "") {
-					alertsRegister.eq(i).show();
-					valid = false;
-				}
-				else {
-					alertsRegister.eq(i).hide();
-				}
-				break;
+	for(var i = 0; i < 6; i++) {
+		if(validRegister.eq(i).val() == "") {
+			alert("Please fill the remaining blanks first.")
+			valid = false;
 		}
 	}
 
 	// Si el password no concuerda con la confirmacion, mostrar alerta
-	if(newPassword.val() !== passwordConfirm.val()) {
+	if(valid && password.val() !== confirm.val()) {
 		valid = false;
 		alert("Password confirmation doesn't match the new password.");
 	}
 
 	// Si si es valida la informacion ingresada
 	if(valid) {
-		if($("input[name='gender']:checked").next().text() == "Masculine")
-			var genderLetter = 'M';
-		else {
-			var genderLetter = 'F';
-		}
 
 		// Registrar usuario nuevo
 		$.ajax({
@@ -136,13 +104,11 @@ ButtonRegister.click(function(){
 			ContentType : "application/json",
 			dataType : "json",
 			data : {
-						"uName" : newUser.val(),
-						"uPassword" : newPassword.val(),
-						"fName" : fName.val(),
-						"lName" : lName.val(),
+						"uName" : user.val(),
+						"uPassword" : password.val(),
+						"fName" : first.val(),
+						"lName" : last.val(),
 						"email" : email.val(),
-						"country" : country.find(":selected").text(),
-						"gender" : genderLetter,
 						"action" : "REGISTER"
 					},
 			success: function(status) {

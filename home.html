@@ -22,11 +22,12 @@
 						Navy Chart
 					</div>
 					<div class="top-bar-right">
-						<ul class="menu">
-							<li><a>Home</a></li>
-							<li><a>Bookmarks</a></li>
-							<li><a>Starred</a></li>
-							<li><a id="logout_button">Logout</a></li>
+						<ul id="mainMenu" class="menu">
+							<li class="Home selected"><a>Home</a></li>
+							<li class="Bookmarks"><a>Bookmarks</a></li>
+							<li class="Starred"><a>Starred</a></li>
+							<li class="Profile"><a>Profile</a></li>
+							<li class="Logout"><a id="logout_button">Logout</a></li>
 						</ul>
 					</div>
 				</div>
@@ -34,6 +35,39 @@
 		</div>
 
 		<div id="content">
+			<section id="Home" class="selected row align-spaced align-middle">
+				<div class="input-group input-group-rounded columns">
+					<input class="input-group-field" type="search" placeholder="Search by tags (#tag1 #tag2)...">
+					<div class="input-group-button">
+						<input type="submit" class="button secondary" value="Search">
+					</div>
+				</div>
+				<div class="columns self-align-middle">
+					<span class="switch large">
+						<input class="switch-input" id="yes-no" type="checkbox" name="exampleSwitch">
+						<label class="switch-paddle" for="yes-no">
+							<span class="show-for-sr">Do you like me?</span>
+							<span class="switch-active" aria-hidden="true">Yes</span>
+							<span class="switch-inactive" aria-hidden="true">No</span>
+						</label>
+					</span>
+					</p>
+					
+				</div>
+
+			</section>
+
+			<section id="Bookmarks" class="notSelected">
+				book
+			</section>
+
+			<section id="Starred" class="notSelected">
+				star
+			</section>
+
+			<section id="Profile" class="notSelected">
+				prof
+			</section>
 
 		</div>
 

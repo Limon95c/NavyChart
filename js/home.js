@@ -34,3 +34,18 @@ $("#logout_button").click(function() {
 		}
 	});
 });
+
+// Click in menu bar
+$("#mainMenu > li").click(function() {
+	if($(this).attr("class") != "Logout") {
+		$("li.selected").removeClass("selected");
+
+		var current = $(this).attr("class");
+
+		$(this).addClass("selected");
+
+		$("section.selected").removeClass("selected").addClass("notSelected");
+
+		$("#" + current).removeClass("notSelected").addClass("selected");
+	}
+});

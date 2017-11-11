@@ -23,10 +23,12 @@
 					</div>
 					<div class="top-bar-right">
 						<ul id="mainMenu" class="menu">
-							<li class="Home selected"><a>Home</a></li>
+							<li class="Home selected">
+
+								<a>Home</a>
+							</li>
 							<li class="Bookmarks"><a>Bookmarks</a></li>
 							<li class="Starred"><a>Starred</a></li>
-							<li class="Profile"><a>Profile</a></li>
 							<li class="Logout"><a id="logout_button">Logout</a></li>
 						</ul>
 					</div>
@@ -35,38 +37,121 @@
 		</div>
 
 		<div id="content">
-			<section id="Home" class="selected row align-spaced align-middle">
-				<div class="input-group input-group-rounded columns">
-					<input class="input-group-field" type="search" placeholder="Search by tags (#tag1 #tag2)...">
-					<div class="input-group-button">
-						<input type="submit" class="button secondary" value="Search">
+			<section id="Home" class="selected">
+				<div class="row">
+					<div class="columns small-8">
+
+						<div class="row callout">
+							<div class="columns">
+								<h4>Create a new ocean</h4>
+								<textarea name="new problem" placeholder="Could you identify any problem or opportunity?"></textarea>
+								<div class="row align-middle align-spaced">
+									<div class="columns shrink offset-right-mini">
+										<p>Tags</p>
+									</div>
+									<div class="columns">
+										<input id="newOceanTags" type="text" name="tags" placeholder="#Category #Sub-category">
+									</div>
+								</div>
+
+								<div class="row align-spaced align-middle">
+									<div class="columns shrink">
+										<input type="submit" class="button zeroMargin" value="Share">
+									</div>
+									<div class="columns shrink align-self-center">
+										<div class="row align-middle">
+											<div class="columns shrink offset-right-mini">
+												Bookmark
+											</div>
+											<div class="switch columns small-offset-1 shrink zeroMargin">
+												<input class="switch-input" id="BookmarkNewOcean" type="checkbox" checked name="sortBy">
+												<label class="switch-paddle" for="BookmarkNewOcean">
+													<span class="show-for-sr">Bookmark new ocean</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>	
+							</div>
+						</div>
+
+						<div class="row align-spaced align-middle">
+
+							<div class="input-group input-group-rounded columns small-7">
+								<input class="input-group-field" type="search" placeholder="Search by tags (#tag1 #tag2)...">
+								<div class="input-group-button">
+									<input type="submit" class="button" value="Search">
+								</div>
+							</div>
+
+							<div class="sortDiv columns shrink">
+								<p>
+									Sort by Popularity
+								</p>
+								<div class="switch">
+									<input class="switch-input" id="sortPopularitySwitch" type="radio" checked name="sortBy">
+									<label class="switch-paddle" for="sortPopularitySwitch">
+										<span class="show-for-sr">Sort by Popularity</span>
+									</label>
+								</div>
+							</div>
+
+							<div class="sortDiv columns shrink">
+								<p>
+									Sort by Date
+								</p>
+								<div class="switch">
+									<input class="switch-input" id="sortDateSwitch" type="radio" name="sortBy">
+									<label class="switch-paddle" for="sortDateSwitch">
+										<span class="show-for-sr">Sort by Date</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="profile columns small-4 align-center">
+						<fieldset class="profile">
+							<i class="profileIcon material-icons">account_circle</i>
+							<p id="name">Jorge Limón Cabrera</p>
+							
+							<div id="profileInfo" class="row align-self-left">
+								<p class="columns small-offset-1">
+									<span><i class="profileIconInline material-icons">perm_contact_calendar</i></span>
+									<span id="username">limon95c</span>
+
+									<br>
+
+									<span><i class="profileIconInline material-icons">contact_mail</i></span>
+									<span id="email">j.limon.cabrera@gmail.com</span>
+								</p>
+							</div>
+						</fieldset>
 					</div>
 				</div>
-				<div class="columns self-align-middle">
-					<span class="switch large">
-						<input class="switch-input" id="yes-no" type="checkbox" name="exampleSwitch">
-						<label class="switch-paddle" for="yes-no">
-							<span class="show-for-sr">Do you like me?</span>
-							<span class="switch-active" aria-hidden="true">Yes</span>
-							<span class="switch-inactive" aria-hidden="true">No</span>
-						</label>
-					</span>
-					</p>
-					
-				</div>
 
+				<div class="row">
+					<div id="oceans" class="columns small-8">
+						<div name="ocean_ID" class="oceanItem">
+							<p>Este es el summary del oceano jodido</p>
+
+							<p>Estos son los tags de este pedo</p>
+
+						</div>
+					</div>
+
+					<div class="columns small-4">
+
+					</div>
+				</div>
 			</section>
 
-			<section id="Bookmarks" class="notSelected">
+			<section id="Bookmarks" class="notSelected hide">
 				book
 			</section>
 
-			<section id="Starred" class="notSelected">
+			<section id="Starred" class="notSelected hide">
 				star
-			</section>
-
-			<section id="Profile" class="notSelected">
-				prof
 			</section>
 
 		</div>

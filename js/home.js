@@ -44,8 +44,8 @@ $("#mainMenu > li").click(function() {
 
 		$(this).addClass("selected");
 
-		$("section.selected").removeClass("selected").addClass("notSelected");
+		$("section.selected").removeClass("selected").addClass("notSelected").addClass("hide");
 
-		$("#" + current).removeClass("notSelected").addClass("selected");
+		$("#" + current).removeClass("notSelected").removeClass("hide").addClass("selected");
 	}
 });

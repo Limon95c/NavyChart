@@ -24,12 +24,29 @@
 					<div class="top-bar-right">
 						<ul id="mainMenu" class="menu">
 							<li class="Home selected">
-
-								<a>Home</a>
+								<a>
+									<span class="align-icons"><i class="material-icons align-icons">home</i></span>
+									Home
+								</a>
 							</li>
-							<li class="Bookmarks"><a>Bookmarks</a></li>
-							<li class="Starred"><a>Starred</a></li>
-							<li class="Logout"><a id="logout_button">Logout</a></li>
+							<li class="Bookmarks">
+								<a>
+									<span class="align-icons"><i class="material-icons align-icons">bookmark</i></span>
+									Bookmarks
+								</a>
+							</li>
+							<li class="Painted">
+								<a>
+									<span class="align-icons"><i class="material-icons align-icons">brush</i></span>
+									Painted
+								</a>
+							</li>
+							<li class="Logout">
+								<a id="logout_button">
+									<span class="align-icons"><i class="material-icons align-icons">report</i></span>
+									Logout
+								</a>
+							</li>
 						</ul>
 					</div>
 				</div>
@@ -86,12 +103,12 @@
 
 							<div class="sortDiv columns shrink">
 								<p>
-									Sort by Popularity
+									Sort by Deepness
 								</p>
 								<div class="switch">
-									<input class="switch-input" id="sortPopularitySwitch" type="radio" checked name="sortBy">
-									<label class="switch-paddle" for="sortPopularitySwitch">
-										<span class="show-for-sr">Sort by Popularity</span>
+									<input class="switch-input" id="sortDeepnessSwitch" type="radio" checked name="sortBy">
+									<label class="switch-paddle" for="sortDeepnessSwitch">
+										<span class="show-for-sr">Sort by Deepness</span>
 									</label>
 								</div>
 							</div>
@@ -133,10 +150,38 @@
 				<div class="row">
 					<div id="oceans" class="columns small-8">
 						<div name="ocean_ID" class="oceanItem">
-							<p>Este es el summary del oceano jodido</p>
+							<div class="row align-middle align-right">
 
-							<p>Estos son los tags de este pedo</p>
+								<div class="columns shrink offset-right-mini align-icons">
+									<div class=" icon row align-middle align-center">
+										<i class="material-icons align-icons">bookmark_border</i>
+										<i class="material-icons align-icons hide">bookmark</i>
+									</div>
+								</div>
 
+								<div class="columns">
+									<p>
+										<strong name="summary">
+											Ipsum es simplemente el texto de relleno de las imprentas y archivos d
+										</strong>
+									</p>
+									<p name="oceanTags">Estos son los tags de este pedo</p>
+								</div>
+
+								<div class="columns shrink offset-right-mini align-icons">
+									<div class="icon row align-middle align-center offset-bottom-mini">
+										<i class="material-icons align-icons hide">brush</i>
+										<i class="material-icons align-icons">brush</i>
+										<span>37</span>
+									</div>
+
+									<div class="icon row align-middle align-center">
+										<i class="material-icons align-icons hide">chat</i>
+										<i class="material-icons align-icons">chat</i>
+										<span>50</span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 
@@ -150,7 +195,7 @@
 				book
 			</section>
 
-			<section id="Starred" class="notSelected hide">
+			<section id="Painted" class="notSelected hide">
 				star
 			</section>
 

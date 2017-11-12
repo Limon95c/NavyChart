@@ -199,3 +199,7 @@ p[name="oceanTags"] {
 .icon {
 	cursor: pointer;
 }
+
+.yellowColor {
+	color: #ffec4e;
+}

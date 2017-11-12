@@ -19,7 +19,7 @@ $.ajax({
 });
 
 // Logout
-$("#logout_button").click(function() {
+$(document).on('click', "#logout_button", function() {
 	$.ajax({
 		url : "./data/applicationLayer.php",
 		type : "POST",
@@ -36,7 +36,7 @@ $("#logout_button").click(function() {
 });
 
 // Click in menu bar
-$("#mainMenu > li").click(function() {
+$(document).on('click', "#mainMenu > li", function() {
 	if($(this).attr("class") != "Logout") {
 		$("li.selected").removeClass("selected");
 
@@ -48,4 +48,66 @@ $("#mainMenu > li").click(function() {
 
 		$("#" + current).removeClass("notSelected").removeClass("hide").addClass("selected");
 	}
+});
+
+// Click to bookmark
+$(document).on('click', 'i[name="bookmark"]', function() {
+	// Remove the hollow icon
+	$(this).addClass('hide');
+	// Add filled icon
+	$(this).next('i[name="bookmarked"]').removeClass('hide');
+});
+
+// Click to unbookmark
+$(document).on('click', 'i[name="bookmarked"]', function() {
+	// Remove the filled icon
+	$(this).addClass('hide');
+	// Add hollow icon
+	$(this).prev('i[name="bookmark"]').removeClass('hide');
+});
+
+// Click to paint/unpaint
+$(document).on('click', 'div[name="paintCounter"]', function() {
+	
+	var icon = $(this).find('i');
+	var counter = icon.next('span');
+
+	// Paint
+	if(counter.attr('name') == "paint") {
+
+		// Pintar de amarillo
+		$(this).addClass('yellowColor');
+		counter.attr('name', 'painted');
+	}
+
+	//Unpaint
+	else if(counter.attr('name') == "painted") {
+
+		// Quitar color amarillo
+		$(this).removeClass('yellowColor');
+		counter.attr('name', 'paint');
+	}
+
+	/*
+	// Paint parent
+	$(this).addClass('yellowColor');
+
+	var element = $(this);
+	var spanElem;
+
+	// Change name
+	if(element.prop("tagName").toLowerCase() == "i") {
+		element.name.attr('name', 'painted');
+		spanElem = element.next('span');
+	}
+	else {
+		element.prev('i').name.attr('name', 'painted');
+		spanElem = element;
+	}
+
+	// Increment value in span
+	var actual = parseInt(spanElem.text());
+	actual = actual + 1;
+	element.text(actual);
+	*/
 });

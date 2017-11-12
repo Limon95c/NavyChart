@@ -70,22 +70,25 @@ $(document).on('click', 'i[name="bookmarked"]', function() {
 $(document).on('click', 'div[name="paintCounter"]', function() {
 	
 	var icon = $(this).find('i');
-	var counter = icon.next('span');
+	var counter = icon.next();
 
-	// Paint
-	if(counter.attr('name') == "paint") {
+	if(counter.hasClass("paint")) {
+		// Paint
 
 		// Pintar de amarillo
 		$(this).addClass('yellowColor');
-		counter.attr('name', 'painted');
-	}
+		counter.toggleClass('paint painted');
 
-	//Unpaint
-	else if(counter.attr('name') == "painted") {
+		// Add 1 to counter - back-end-------------------
+	}
+	else if(counter.hasClass("painted")) {
+		//Unpaint
 
 		// Quitar color amarillo
 		$(this).removeClass('yellowColor');
-		counter.attr('name', 'paint');
+		counter.toggleClass('paint painted');
+
+		// Remove 1 from counter - back-end-----------------
 	}
 
 	/*
@@ -110,4 +113,12 @@ $(document).on('click', 'div[name="paintCounter"]', function() {
 	actual = actual + 1;
 	element.text(actual);
 	*/
+});
+
+// Click to open chat
+$(document).on('click', 'div[name="chatToggler"]', function() {
+
+	// Fill messages-----------------
+
+	$(this).parents('div.oceanItem').find('div[name="chatWindow"]').toggleClass('hide');
 });

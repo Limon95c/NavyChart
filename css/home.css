@@ -120,6 +120,10 @@ i.profileIcon {
 	color: #000080;
 }
 
+i.inlineIcon {
+	font-size: 100px;
+}
+
 fieldset > p {
 	font-size: 30px;
 	color: #000080;
@@ -145,6 +149,10 @@ fieldset > p {
 .zeroMarginPadding {
 	margin: 0;
 	padding: 0;
+}
+
+.offset-top-mini {
+	margin-top: 12px;
 }
 
 .offset-right-mini {
@@ -202,4 +210,53 @@ p[name="oceanTags"] {
 
 .yellowColor {
 	color: #ffec4e;
+}
+
+div[name="chatWindow"] {
+	background-color: #fafafa;
+	border-radius: 15px;
+	color: #000000;
+	padding: 12px;
+	box-shadow: 1px 1px 3px #000000;
+}
+
+div.chatHeader {
+	text-align: center;
+}
+
+.myMessage, .notMyMessage {
+	border-radius: 15px;
+	padding: 12px;
+	margin-bottom: 12px;
+	box-shadow: 1px 1px 3px #000000;
+}
+
+.myMessage {
+	background-color: #000080;
+	color: #FFFFFF;
+}
+
+.notMyMessage {
+	background-color: #bbdefb;
+}
+
+.senderUsername, .myUsername {
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.senderUsername {
+	color: #000080;
+}
+
+.dateStyle {
+	color: #757575;
+	font-size: 12px;
+}
+
+.newMessage {
+	background-color: #fafafa;
+	margin-bottom: 0;
 }

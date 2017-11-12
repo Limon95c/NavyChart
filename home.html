@@ -56,9 +56,8 @@
 		<div id="content">
 			<section id="Home" class="selected">
 				<div class="row">
-					<div class="columns small-8">
-
-						<div class="row callout">
+					<div class="columns small-8 align-self-strech">
+						<div class="row callout zeroMargin">
 							<div class="columns">
 								<h4>Create a new ocean</h4>
 								<textarea name="new problem" placeholder="Could you identify any problem or opportunity?"></textarea>
@@ -91,47 +90,12 @@
 								</div>	
 							</div>
 						</div>
-
-						<div class="row align-spaced align-middle">
-
-							<div class="input-group input-group-rounded columns small-7">
-								<input class="input-group-field" type="search" placeholder="Search by tags (#tag1 #tag2)...">
-								<div class="input-group-button">
-									<input type="submit" class="button" value="Search">
-								</div>
-							</div>
-
-							<div class="sortDiv columns shrink">
-								<p>
-									Sort by Deepness
-								</p>
-								<div class="switch">
-									<input class="switch-input" id="sortDeepnessSwitch" type="radio" checked name="sortBy">
-									<label class="switch-paddle" for="sortDeepnessSwitch">
-										<span class="show-for-sr">Sort by Deepness</span>
-									</label>
-								</div>
-							</div>
-
-							<div class="sortDiv columns shrink">
-								<p>
-									Sort by Date
-								</p>
-								<div class="switch">
-									<input class="switch-input" id="sortDateSwitch" type="radio" name="sortBy">
-									<label class="switch-paddle" for="sortDateSwitch">
-										<span class="show-for-sr">Sort by Date</span>
-									</label>
-								</div>
-							</div>
-						</div>
 					</div>
-
 					<div class="profile columns small-4 align-center">
 						<fieldset class="profile">
 							<i class="profileIcon material-icons">account_circle</i>
 							<p id="name">Jorge Limón Cabrera</p>
-							
+								
 							<div id="profileInfo" class="row align-self-left">
 								<p class="columns small-offset-1">
 									<span><i class="profileIconInline material-icons">perm_contact_calendar</i></span>
@@ -147,9 +111,333 @@
 					</div>
 				</div>
 
+				<div class="row align-spaced align-middle offset-top-mini">
+
+					<div class="input-group input-group-rounded columns small-7">
+						<input class="input-group-field" type="search" placeholder="Search by tags (#tag1 #tag2)...">
+						<div class="input-group-button">
+							<input type="submit" class="button" value="Search">
+						</div>
+					</div>
+
+					<div class="sortDiv columns shrink">
+						<p>
+							Sort by Deepness
+						</p>
+						<div class="switch">
+							<input class="switch-input" id="sortDeepnessSwitch" type="radio" checked name="sortBy">
+							<label class="switch-paddle" for="sortDeepnessSwitch">
+								<span class="show-for-sr">Sort by Deepness</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="sortDiv columns shrink">
+						<p>
+							Sort by Date
+						</p>
+						<div class="switch">
+							<input class="switch-input" id="sortDateSwitch" type="radio" name="sortBy">
+							<label class="switch-paddle" for="sortDateSwitch">
+								<span class="show-for-sr">Sort by Date</span>
+							</label>
+						</div>
+					</div>
+				</div>
+
 				<div class="row">
-					<div id="oceans" class="columns small-8">
+					<div id="oceans" class="columns">
 						<div name="ocean_ID" class="oceanItem">
+
+							<div class="row align-middle align-right">
+
+								<div class="columns shrink offset-right-mini align-icons">
+									<div class=" icon row align-middle align-center">
+										<i name="bookmark" class="material-icons align-icons">bookmark_border</i>
+										<i name="bookmarked" class="material-icons align-icons yellowColor hide">bookmark</i>
+									</div>
+								</div>
+
+								<div class="columns offset-right-mini">
+									<p>
+										<strong name="summary">
+											Whenever some tries 
+										</strong>
+									</p>
+									<p name="oceanTags">Estos son los tags de este pedo</p>
+								</div>
+
+								<div class="columns shrink offset-right-mini">
+									<div name="paintCounter" class="icon row align-middle align-center offset-bottom-mini">
+										<i class="material-icons">brush</i>
+										<span name="counter" class="paint">
+											37
+										</span>
+									</div>
+
+									<div name="chatToggler" class="icon row align-middle align-center">
+										<i name="chat" class="material-icons align-icons">chat</i>
+										<span>50</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row align-center">
+								<div name="chatWindow" class="columns small-8 hide">
+									<div class="chatHeader row align-center">
+										<h4>Messages</h4>
+									</div>
+									<hr>
+									<div name="messages">
+
+										<div name="messageItem" class="row align-right">
+											<div class="myMessage columns small-8 shrink small-offset-2">
+												<p class="myUsername">
+													Limon95c
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">
+														sobres
+												</p>
+											</div>
+										</div>
+
+										<div name="messageItem" class="row align-left">
+											<div class="notMyMessage columns small-8">
+												<p class="senderUsername">
+													Mario
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta).</p>
+											</div>
+										</div>
+
+									</div>
+									<hr>
+									<div name="newMassage" class="newMessage row align-middle">
+										<div class="columns">
+											<input type="text" placeholder="Post a message...">
+										</div>
+										<div class="columns shrink">
+											<input type="submit" class="button" name="newMsg" Value="Post">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div name="ocean_ID" class="oceanItem">
+
+							<div class="row align-middle align-right">
+
+								<div class="columns shrink offset-right-mini align-icons">
+									<div class=" icon row align-middle align-center">
+										<i name="bookmark" class="material-icons align-icons">bookmark_border</i>
+										<i name="bookmarked" class="material-icons align-icons yellowColor hide">bookmark</i>
+									</div>
+								</div>
+
+								<div class="columns offset-right-mini">
+									<p>
+										<strong name="summary">
+											Whenever some tries to be an excelent teacher
+										</strong>
+									</p>
+									<p name="oceanTags">Estos son los tags de este pedo</p>
+								</div>
+
+								<div class="columns shrink offset-right-mini">
+									<div name="paintCounter" class="icon row align-middle align-center offset-bottom-mini">
+										<i class="material-icons">brush</i>
+										<span name="counter" class="paint">
+											37
+										</span>
+									</div>
+
+									<div name="chatToggler" class="icon row align-middle align-center">
+										<i name="chat" class="material-icons align-icons">chat</i>
+										<span>50</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row align-center">
+								<div name="chatWindow" class="columns small-8 hide">
+									<div class="chatHeader row align-center">
+										<h4>Messages</h4>
+									</div>
+									<hr>
+									<div name="messages">
+
+										<div name="messageItem" class="row align-right">
+											<div class="myMessage columns small-8 shrink small-offset-2">
+												<p class="myUsername">
+													Limon95c
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">
+														sobres
+												</p>
+											</div>
+										</div>
+
+										<div name="messageItem" class="row align-left">
+											<div class="notMyMessage columns small-8">
+												<p class="senderUsername">
+													Mario
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta).</p>
+											</div>
+										</div>
+
+									</div>
+									<hr>
+									<div name="newMassage" class="newMessage row align-middle">
+										<div class="columns">
+											<input type="text" placeholder="Post a message...">
+										</div>
+										<div class="columns shrink">
+											<input type="submit" class="button" name="newMsg" Value="Post">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div name="ocean_ID" class="oceanItem">
+
+							<div class="row align-middle align-right">
+
+								<div class="columns shrink offset-right-mini align-icons">
+									<div class=" icon row align-middle align-center">
+										<i name="bookmark" class="material-icons align-icons">bookmark_border</i>
+										<i name="bookmarked" class="material-icons align-icons yellowColor hide">bookmark</i>
+									</div>
+								</div>
+
+								<div class="columns offset-right-mini">
+									<p>
+										<strong name="summary">
+											Whenever some tries 
+										</strong>
+									</p>
+									<p name="oceanTags">Estos son los tags de este pedo</p>
+								</div>
+
+								<div class="columns shrink offset-right-mini">
+									<div name="paintCounter" class="icon row align-middle align-center offset-bottom-mini">
+										<i class="material-icons">brush</i>
+										<span name="counter" class="paint">
+											37
+										</span>
+									</div>
+
+									<div name="chatToggler" class="icon row align-middle align-center">
+										<i name="chat" class="material-icons align-icons">chat</i>
+										<span>50</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row align-center">
+								<div name="chatWindow" class="columns small-8 hide">
+									<div class="chatHeader row align-center">
+										<h4>Messages</h4>
+									</div>
+									<hr>
+									<div name="messages">
+
+										<div name="messageItem" class="row align-right">
+											<div class="myMessage columns small-8 shrink small-offset-2">
+												<p class="myUsername">
+													Limon95c
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">
+														sobres
+												</p>
+											</div>
+										</div>
+
+										<div name="messageItem" class="row align-left">
+											<div class="notMyMessage columns small-8">
+												<p class="senderUsername">
+													Mario
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta).</p>
+											</div>
+										</div>
+
+									</div>
+									<hr>
+									<div name="newMassage" class="newMessage row align-middle">
+										<div class="columns">
+											<input type="text" placeholder="Post a message...">
+										</div>
+										<div class="columns shrink">
+											<input type="submit" class="button" name="newMsg" Value="Post">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section id="Bookmarks" class="notSelected hide">
+				<div class="row align-spaced align-middle offset-top-mini">
+
+					<div class="input-group input-group-rounded columns small-7">
+						<input class="input-group-field" type="search" placeholder="Search by tags (#tag1 #tag2)...">
+						<div class="input-group-button">
+							<input type="submit" class="button" value="Search">
+						</div>
+					</div>
+
+					<div class="sortDiv columns shrink">
+						<p>
+							Sort by Deepness
+						</p>
+						<div class="switch">
+							<input class="switch-input" id="sortDeepnessSwitchBook" type="radio" checked name="paintSortBy">
+							<label class="switch-paddle" for="sortDeepnessSwitchBook">
+								<span class="show-for-sr">Sort by Deepness</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="sortDiv columns shrink">
+						<p>
+							Sort by Date
+						</p>
+						<div class="switch">
+							<input class="switch-input" id="sortDateSwitchBook" type="radio" name="paintSortBy">
+							<label class="switch-paddle" for="sortDateSwitchBook">
+								<span class="show-for-sr">Sort by Date</span>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div id="oceansBook" class="columns">
+						<div name="ocean_ID" class="oceanItem">
+
 							<div class="row align-middle align-right">
 
 								<div class="columns shrink offset-right-mini align-icons">
@@ -168,33 +456,193 @@
 									<p name="oceanTags">Estos son los tags de este pedo</p>
 								</div>
 
-								<div class="columns shrink offset-right-mini align-icons">
+								<div class="columns shrink offset-right-mini">
 									<div name="paintCounter" class="icon row align-middle align-center offset-bottom-mini">
-										<i name="paint" class="material-icons align-icons">brush</i>
-										<span name="painted">37</span>
+										<i class="material-icons">brush</i>
+										<span name="counter" class="paint">
+											37
+										</span>
 									</div>
 
-									<div class="icon row align-middle align-center">
+									<div name="chatToggler" class="icon row align-middle align-center">
 										<i name="chat" class="material-icons align-icons">chat</i>
 										<span>50</span>
 									</div>
 								</div>
 							</div>
+
+							<div class="row align-center">
+								<div name="chatWindow" class="columns small-8 hide">
+									<div class="chatHeader row align-center">
+										<h4>Messages</h4>
+									</div>
+									<hr>
+									<div name="messages">
+
+										<div name="messageItem" class="row align-right">
+											<div class="myMessage columns small-8 shrink small-offset-2">
+												<p class="myUsername">
+													Limon95c
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">
+														sobres
+												</p>
+											</div>
+										</div>
+
+										<div name="messageItem" class="row align-left">
+											<div class="notMyMessage columns small-8">
+												<p class="senderUsername">
+													Mario
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta).</p>
+											</div>
+										</div>
+
+									</div>
+									<hr>
+									<div name="newMassage" class="newMessage row align-middle">
+										<div class="columns">
+											<input type="text" placeholder="Post a message...">
+										</div>
+										<div class="columns shrink">
+											<input type="submit" class="button" name="newMsg" Value="Post">
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
-
-					<div class="columns small-4">
-
 					</div>
 				</div>
 			</section>
 
-			<section id="Bookmarks" class="notSelected hide">
-				book
-			</section>
-
 			<section id="Painted" class="notSelected hide">
-				star
+				<div class="row align-spaced align-middle offset-top-mini">
+
+					<div class="input-group input-group-rounded columns small-7">
+						<input class="input-group-field" type="search" placeholder="Search by tags (#tag1 #tag2)...">
+						<div class="input-group-button">
+							<input type="submit" class="button" value="Search">
+						</div>
+					</div>
+
+					<div class="sortDiv columns shrink">
+						<p>
+							Sort by Deepness
+						</p>
+						<div class="switch">
+							<input class="switch-input" id="sortDeepnessSwitchPaint" type="radio" checked name="bookSortBy">
+							<label class="switch-paddle" for="sortDeepnessSwitchPaint">
+								<span class="show-for-sr">Sort by Deepness</span>
+							</label>
+						</div>
+					</div>
+
+					<div class="sortDiv columns shrink">
+						<p>
+							Sort by Date
+						</p>
+						<div class="switch">
+							<input class="switch-input" id="sortDateSwitchPaint" type="radio" name="bookSortBy">
+							<label class="switch-paddle" for="sortDateSwitchPaint">
+								<span class="show-for-sr">Sort by Date</span>
+							</label>
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div id="oceansPaint" class="columns">
+						<div name="ocean_ID" class="oceanItem">
+
+							<div class="row align-middle align-right">
+
+								<div class="columns shrink offset-right-mini align-icons">
+									<div class=" icon row align-middle align-center">
+										<i name="bookmark" class="material-icons align-icons">bookmark_border</i>
+										<i name="bookmarked" class="material-icons align-icons yellowColor hide">bookmark</i>
+									</div>
+								</div>
+
+								<div class="columns">
+									<p>
+										<strong name="summary">
+											Ipsum es simplemente el texto de relleno de las imprentas y archivos d
+										</strong>
+									</p>
+									<p name="oceanTags">Estos son los tags de este pedo</p>
+								</div>
+
+								<div class="columns shrink offset-right-mini">
+									<div name="paintCounter" class="icon row align-middle align-center offset-bottom-mini">
+										<i class="material-icons">brush</i>
+										<span name="counter" class="paint">
+											37
+										</span>
+									</div>
+
+									<div name="chatToggler" class="icon row align-middle align-center">
+										<i name="chat" class="material-icons align-icons">chat</i>
+										<span>50</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row align-center">
+								<div name="chatWindow" class="columns small-8 hide">
+									<div class="chatHeader row align-center">
+										<h4>Messages</h4>
+									</div>
+									<hr>
+									<div name="messages">
+
+										<div name="messageItem" class="row align-right">
+											<div class="myMessage columns small-8 shrink small-offset-2">
+												<p class="myUsername">
+													Limon95c
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">
+														sobres
+												</p>
+											</div>
+										</div>
+
+										<div name="messageItem" class="row align-left">
+											<div class="notMyMessage columns small-8">
+												<p class="senderUsername">
+													Mario
+													<span class="dateStyle">
+														- 15 de septiembre 2016 - 3:34pm
+													</span>
+												</p>
+												<p class="zeroMarginPadding">Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta).</p>
+											</div>
+										</div>
+
+									</div>
+									<hr>
+									<div name="newMassage" class="newMessage row align-middle">
+										<div class="columns">
+											<input type="text" placeholder="Post a message...">
+										</div>
+										<div class="columns shrink">
+											<input type="submit" class="button" name="newMsg" Value="Post">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</section>
 
 		</div>

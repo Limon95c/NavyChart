@@ -68,6 +68,8 @@ input[name="username"] {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: 30% 50%;
+	box-shadow: 1px 1px 3px #000000;
+	border-radius: 25px;
 }
 
 section {

@@ -25,13 +25,21 @@
 		case "REGISTER":
 			registerService();
 			break;
+
+		case "PROFILE":
+			profileService();
+			break;
+
+		case "CREATE_OCEAN":
+			newOceanService();
+			break;
 		
 		default:
 			# code...
 			break;
 	}
 
-	# Error function REWRITE
+	# Error function
 	function genericErrorFunction($errorCode) {
 		switch($errorCode) {
 			case "500" : header("HTTP/1.1 500 Bad connection, portal down");
@@ -291,38 +299,111 @@
 		$response = array("result" => "SUCCESS");
 		echo json_encode($response);
 	}
-	# REWRITE
-	function newCommentService() {
+	
+	function newOceanService() {
+
 		session_start();
 		if(isset($_SESSION['current'])) {
 			# Fetch required data
-			$currentUID = $_SESSION['current'];
-			$comment = addslashes($_POST["comment"]);
+			$creator = $_SESSION['current'];
+			$content = addslashes($_POST["content"]);
+			$tags = $_POST["tags"];
+			$bookmark = $_POST["bookmark"];
 
-			# Attempt to create a new comment
-			$newCommentOutcome = attemptCreateComment($currentUID, $comment);
+			# Attempt to create a new ocean
+			$newOceanOutcome = attemptCreateOcean($content);
 
 			# If it was successful...
-			if ($newCommentOutcome['MESSAGE'] == "SUCCESS") {
+			if ($newOceanOutcome['MESSAGE'] == "SUCCESS") {
 
-				# Get user information to present the new comment
-				$userInfo = fetchProfile($currentUID);
+				# Get the new ocean id
+				$getLastOceanIDOutcome = getLastOceanID();
 
-				# If information is fetched...
-				if ($userInfo['MESSAGE'] == "SUCCESS") {
-					# Return profile data
-					echo json_encode($userInfo);
+				# If it was successful...
+				if($getLastOceanIDOutcome["MESSAGE"] == "SUCCESS") {
+
+					# Retrieve id
+					$oceanID = $getLastOceanIDOutcome["ID"];
+
+					# Create array of non-existent tags
+					$newTags = array();
+					foreach($tags as &$tag) {
+
+						# Check if tag already exists
+						$tagExistence = verifyTagExistence($tag);
+
+						# If it didn't exist
+						if($tagExistence["MESSAGE"] == "NO") {
+							# Add to array of non-existent tags
+							$newTags[] = $tag;
+						}
+					}
+
+					# Create new tags if any
+					if(!empty($newTags)) {
+						$newTagsOutcome = attemptCreateTags($newTags);
+
+						if($newTagsOutcome['MESSAGE'] != "SUCCESS") {
+							# Error message
+							genericErrorFunction($newTagsOutcome["MESSAGE"]);
+						}
+					}
+
+					# Get array of ids from those tags
+					$tagsIDs = array();
+					foreach($tags as &$tag) {
+						$getTagIDOutcome = getTagID($tag);
+
+						if($getTagIDOutcome["MESSAGE"] == "SUCCESS") {
+							$tagsIDs[] = $getTagIDOutcome["ID"];
+						}
+						else {
+							# Error message
+							genericErrorFunction($getTagIDOutcome["MESSAGE"]);
+						}
+					}
+
+					# Relate tags to ocean
+					foreach($tagsIDs as &$tagID) {
+						$relateTagOceanOutcome = relateTagToOcean($tagID, $oceanID);
+
+						if($relateTagOceanOutcome["MESSAGE"] != "SUCCESS") {
+							# Error message
+							genericErrorFunction($relateTagOceanOutcome["MESSAGE"]);
+						}
+					}
+
+					# Paint ocean by creator
+					$paintOceanOutcome = paintOcean($creator, $oceanID);
+
+					if($paintOceanOutcome["MESSAGE"] != "SUCCESS") {
+						# Error message
+						genericErrorFunction($paintOceanOutcome["MESSAGE"]);
+					}
+
+					# Bookmark ocean if indicated
+					if($bookmark == "true") {
+						$bookmarkOceanOutcome = bookmarkOcean($creator, $oceanID);
+
+						if($bookmarkOceanOutcome["MESSAGE"] != "SUCCESS") {
+							# Error message
+							genericErrorFunction($bookmarkOceanOutcome["MESSAGE"]);
+						}
+					}
+
+					$response = array("MESSAGE" => "SUCCESS");
+					
+					echo json_encode($response);
 				}
-				# If fetching information fails...
 				else {
 					# Error message
-					genericErrorFunction($userInfo["MESSAGE"]);
+					genericErrorFunction($getLastOceanIDOutcome["MESSAGE"]);
 				}
 			}
 			# If insertion fails...
 			else {
 				# Error message
-				genericErrorFunction($newCommentOutcome["MESSAGE"]);
+				genericErrorFunction($newOceanOutcome["MESSAGE"]);
 			}
 		}
 		else {
@@ -332,7 +413,7 @@
 			echo json_encode($response);
 		}
 	}
-	# REWRITE
+	
 	function profileService() {
 		session_start();
 		if(isset($_SESSION['current'])) {

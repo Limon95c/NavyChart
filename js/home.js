@@ -1,3 +1,5 @@
+// Initialize
+
 // Redirect
 $.ajax({
 	url : "./data/applicationLayer.php",
@@ -17,6 +19,30 @@ $.ajax({
 		alert(errorMessage.statusText);
 	}
 });
+
+// Fill user information
+$.ajax({
+	url : "./data/applicationLayer.php",
+	type : "POST",
+	dataType : "json",
+	data : 	{
+				"action" : "PROFILE"
+			},
+	ContentType : "application/json",
+
+	success : function(profile) {
+		$("#name").text(profile.fName + " " + profile.lName);
+
+		$("#username").text(profile.username);
+
+		$("#email").text(profile.email);
+	},
+	error : function(errorMessage) {
+		alert(errorMessage.statusText);
+	}
+});
+
+// Events
 
 // Logout
 $(document).on('click', "#logout_button", function() {
@@ -122,3 +148,64 @@ $(document).on('click', 'div[name="chatToggler"]', function() {
 
 	$(this).parents('div.oceanItem').find('div[name="chatWindow"]').toggleClass('hide');
 });
+
+$(document).on('click', '#newOcean', createOcean);
+function createOcean() {
+
+	// If fields are not empty
+	if($('textarea[name="newOceanSummary"]').val() != "" && $('#newOceanTags').val() != "") {
+
+		// Obtain information
+		var content = $('textarea[name="newOceanSummary"]').val();
+		var sTags = $('#newOceanTags').val();
+		var tags = sTags.split('#');
+		tags = tags.slice(1);
+		var jsonToSend;
+
+		// Add bookmark to that ocean or not
+		if($('#BookmarkNewOcean').prop('checked')) {
+			jsonToSend = {
+							"content" : content,
+							"tags" : tags,
+							"bookmark" : "true",
+							"action" : "CREATE_OCEAN"
+						 };
+		}
+		else {
+			jsonToSend = {
+							"content" : content,
+							"tags" : tags,
+							"bookmark" : "false",
+							"action" : "CREATE_OCEAN"
+						 };
+		}
+
+		// Send to database
+		$.ajax({
+			url : "./data/applicationLayer.php",
+			type : "POST",
+			dataType : "json",
+			data : 	jsonToSend,
+			ContentType : "application/json",
+
+			success : function(reply) {
+				if(reply.MESSAGE == "SUCCESS") {
+					updateOceans();
+					$('textarea[name="newOceanSummary"]').val("");
+					$('#newOceanTags').val("");
+					alert("New ocean created successfully!");
+				}
+			},
+			error : function(errorMessage) {
+				alert(errorMessage.statusText);
+			}
+		});
+	}
+	else {
+		alert("Remember to write a summary of the new ocean and it's tags!");
+	}
+}
+
+function updateOceans() {
+
+}

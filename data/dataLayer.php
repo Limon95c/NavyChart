@@ -1,6 +1,5 @@
 <?php
 	
-	# REWRITE
 	# Function to initialize database connection
 	function databaseConnection() {
 		# Save configuration in local variables
@@ -63,6 +62,42 @@
 		}
 	}
 
+	# Attempt to create an ocean
+	function attemptCreateOcean($content) {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "INSERT INTO Oceans(summary)
+					VALUES ('$content')";
+
+			# Query execution
+			$oceanCreated = $connection -> query($sql);
+
+			# If user is created successfully...
+			if ($oceanCreated === true) {
+
+				$response = array("MESSAGE" => "SUCCESS");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return an error message if database insertion failed
+			else {
+				return array("MESSAGE" => "500");
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
 	# Attempt to create new user function
 	function attemptCreateUser($uName, $uPassword, $fName, $lName, $email) {
 
@@ -100,9 +135,8 @@
 		}
 	}
 
-	# REWRITE
-	# Attempt to create a comment
-	function attemptCreateComment($currentUID, $comment) {
+	# Attempt to create new tags
+	function attemptCreateTags($tags) {
 		# Obtain null or actual reference of connection
 		$connection = databaseConnection();
 
@@ -110,14 +144,25 @@
 		if($connection != null) {
 
 			# Query forumlation
-			$sql = "INSERT INTO Comments(user_ID, content)
-					VALUES ('$currentUID', '$comment')";
+			$sql = "INSERT INTO Tags(tag) VALUES ";
+			
+			$first = true;
+			foreach($tags as &$tag){
+				if($first) {
+					$sql .= "('$tag')";
+					$first = false;
+				}
+				else {
+					$sql .= ", ('$tag')";
+				}
+			}
+			$sql .= ";";
 
 			# Query execution
-			$commentCreated = $connection -> query($sql);
+			$tagsCreated = $connection -> query($sql);
 
 			# If user is created successfully...
-			if ($commentCreated === true) {
+			if ($tagsCreated === true) {
 
 				$response = array("MESSAGE" => "SUCCESS");
 				
@@ -155,6 +200,42 @@
 
 			# If friend request is created successfully...
 			if ($requestCreated === true) {
+
+				$response = array("MESSAGE" => "SUCCESS");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return an error message if database insertion failed
+			else {
+				return array("MESSAGE" => "500");
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
+	# Bookmark an ocean
+	function bookmarkOcean($user_ID, $ocean_ID) {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "INSERT INTO Bookmarks(user_ID, ocean_ID)
+					VALUES ('$user_ID', '$ocean_ID');";
+
+			# Query execution
+			$result = $connection -> query($sql);
+
+			# If user is created successfully...
+			if ($result === true) {
 
 				$response = array("MESSAGE" => "SUCCESS");
 				
@@ -387,7 +468,6 @@
 		}
 	}
 
-	# REWRITE
 	# Get profile information from a user
 	function fetchProfile($currentUID) {
 		# Obtain null or actual reference of connection
@@ -397,7 +477,7 @@
 		if($connection != null) {
 
 			# Query forumlation
-			$sql = "SELECT fName, lName, username, email, 	  gender, country
+			$sql = "SELECT fName, lName, username, email
 					FROM Users
 					WHERE ID = '$currentUID'";
 
@@ -413,9 +493,7 @@
 								  "fName" => $row["fName"],
 							  	  "lName" => $row["lName"],
 							  	  "username" => $row["username"],
-							  	  "email" => $row["email"],
-							  	  "gender" => $row["gender"],
-							  	  "country" => $row["country"]);
+							  	  "email" => $row["email"]);
 				
 				# Cerrar la conexion a base de datos
 				$connection -> close();
@@ -423,6 +501,86 @@
 				return $response;
 			}
 			# Return an error message if query failed
+			else {
+				return array("MESSAGE" => "500");
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
+	# Get the ID of the last ocean created
+	function getLastOceanID() {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "SELECT ID
+					FROM Oceans
+					ORDER BY ID DESC LIMIT 1";
+
+			# Query execution
+			$result = $connection -> query($sql);
+
+			# If query was successful
+			if ($result -> num_rows > 0) {
+
+				# Fetching single result
+				$row = $result -> fetch_assoc();
+				$response = array("MESSAGE" => "SUCCESS",
+								  "ID" => $row["ID"]);
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return an error message if database query
+			else {
+				return array("MESSAGE" => "500");
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
+	# Get tag ID
+	function getTagID($tag) {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "SELECT ID
+					FROM Tags
+					WHERE tag = '$tag'";
+
+			# Query execution
+			$result = $connection -> query($sql);
+
+			# If tag is created successfully...
+			if ($result -> num_rows > 0) {
+
+				# Fetching single result
+				$row = $result -> fetch_assoc();
+				$response = array("MESSAGE" => "SUCCESS",
+								  "ID" => $row["ID"]);
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return an error message if database query
 			else {
 				return array("MESSAGE" => "500");
 			}
@@ -473,6 +631,121 @@
 		}
 	}
 
+	# Paint an ocean
+	function paintOcean($user_ID, $ocean_ID) {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "INSERT INTO Painted(user_ID, ocean_ID)
+					VALUES ('$user_ID', '$ocean_ID');";
+
+			# Query execution
+			$result = $connection -> query($sql);
+
+			# If user is created successfully...
+			if ($result === true) {
+
+				$response = array("MESSAGE" => "SUCCESS");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return an error message if database insertion failed
+			else {
+				return array("MESSAGE" => "500");
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
+	# Relate tag to ocean
+	function relateTagToOcean($tag_ID, $ocean_ID) {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "INSERT INTO TagsToOceans(tag_ID, ocean_ID)
+					VALUES ('$tag_ID', '$ocean_ID');";
+
+			# Query execution
+			$result = $connection -> query($sql);
+
+			# If user is created successfully...
+			if ($result === true) {
+
+				$response = array("MESSAGE" => "SUCCESS");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return an error message if database insertion failed
+			else {
+				return array("MESSAGE" => "500");
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
+	# Verify that a tag exists
+	function verifyTagExistence($tag) {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "SELECT tag
+					FROM Tags
+					WHERE tag = '$tag'";
+
+			# Query execution
+			$result = $connection -> query($sql);
+
+			# If tag wasn't found...
+			if ($result -> num_rows == 0) {
+
+				# Return no as an answer
+				$response = array("MESSAGE" => "NO");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return yes if tag already existed
+			else {
+				$response = array("MESSAGE" => "YES");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
 	# Verify that a user exists
 	function verifyUserExistence($uName) {
 		# Obtain null or actual reference of connection
@@ -489,9 +762,10 @@
 			# Query execution
 			$result = $connection -> query($sql);
 
-			# If user is created successfully...
+			# If user didn't exist...
 			if ($result -> num_rows == 0) {
 
+				# Return no as an answer
 				$response = array("MESSAGE" => "NO");
 				
 				# Cerrar la conexion a base de datos
@@ -499,9 +773,14 @@
 				# Regresar respuesta
 				return $response;
 			}
-			# Return an error message if database insertion failed
+			# Return yes if user already existed
 			else {
-				return array("MESSAGE" => "409");
+				$response = array("MESSAGE" => "YES");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
 			}
 		}
 		# Return an error message if connection is null

@@ -33,7 +33,27 @@
 		case "CREATE_OCEAN":
 			newOceanService();
 			break;
-		
+
+		case "OCEANS":
+			fillOceansService();
+			break;
+
+		case "BOOKMARK":
+			bookmarkService();
+			break;
+
+		case "UNBOOKMARK":
+			unbookmarkService();
+			break;
+
+		case "UNPAINT":
+			unpaintService();
+			break;
+
+		case "PAINT":
+			paintService();
+			break;
+
 		default:
 			# code...
 			break;
@@ -83,124 +103,36 @@
 	}
 
 	# -------------- Services --------------
-	# REWRITE
-	function answerFriendRequestService() {
+	
+	function fillOceansService() {
 		session_start();
 		if(isset($_SESSION['current'])) {
+
 			# Fetch required data
 			$currentUID = $_SESSION['current'];
-			$senderUsername = $_POST['request_sender'];
-			$answer = $_POST['answer'];
+			$section = $_POST['section'];
 
-			// Get the id of the new friend
-			$friendIDRetrival = getUserID($senderUsername);
-
-			if($friendIDRetrival["MESSAGE"] == "SUCCESS") {
-
-				if($answer == "accept") {
-
-					// Add the friend
-					$addFriendOutcome = addFriend($currentUID, $friendIDRetrival["UID"]);
-
-					// If insertion was successful...
-					if($addFriendOutcome["MESSAGE"] == "SUCCESS") {
-
-						# Remove request from the database
-						$removeRequestOutcome = removeRequest($friendIDRetrival["UID"], $currentUID);
-
-						if($removeRequestOutcome["MESSAGE"] == "SUCCESS") {
-							$response = array("outcome" => "SUCCESS");
-
-							echo json_encode($response);
-						}
-						// If removal fails...
-						else {
-							// Error message
-							genericErrorFunction($removeRequestOutcome["MESSAGE"]);
-						}
-					}
-					else {
-						genericErrorFunction($addFriendOutcome["MESSAGE"]);
-					}
-				}
-				else if($answer == "reject"){
-					# Remove request from the database
-					$removeRequestOutcome = removeRequest($friendIDRetrival["UID"], $currentUID);
-
-					if($removeRequestOutcome["MESSAGE"] == "SUCCESS") {
-						$response = array("outcome" => "SUCCESS");
-
-						echo json_encode($response);
-					}
-					// If insertion fails...
-					else {
-						// Error message
-						genericErrorFunction($removeRequestOutcome["MESSAGE"]);
-					}
-				}
+			if(isset($_POST['tags'])) {
+				$tags = $_POST['tags'];
 			}
-				// If id retrival fails...
 			else {
-				// Error message
-				genericErrorFunction($friendIDRetrival["MESSAGE"]);
+				$tags = array();
 			}
-		}
-		else {
-			session_destroy();
-			setcookie("PHPSESSID", "", time() - 1, "/", "", 0);
-			$response = array("MESSAGE" => "IGNORED");
-			echo json_encode($response);
-		}
-	}
-	# REWRITE
-	function commentsService() {
-		session_start();
-		if(isset($_SESSION['current'])) {
-			# Fetch required data
-			$currentUID = $_SESSION['current'];
+			$order = $_POST['sort'];
 
 			# Launch data layer execution attempt
-			$commentsFetched = fetchComments($currentUID);
+			$oceansFetched = fetchOceans($currentUID, $section, $tags, $order);
 			
 			# If the message is success...
-			if($commentsFetched["MESSAGE"] == "SUCCESS") {
-				
-				# Return profile data
-				echo json_encode($commentsFetched['COMMENTS']);
-			}
-			# If attempt failed...
-			else {
-				# Error message
-				genericErrorFunction($commentsFetched["MESSAGE"]);
-			}
-		}
-		else {
-			session_destroy();
-			setcookie("PHPSESSID", "", time() - 1, "/", "", 0);
-			$response = array("MESSAGE" => "IGNORED");
-			echo json_encode($response);
-		}
-	}
-	# REWRITE
-	function fillFriendListService() {
-		session_start();
-		if(isset($_SESSION['current'])) {
-			# Fetch required data
-			$currentUID = $_SESSION['current'];
-
-			# Launch data layer execution attempt
-			$friendsFetched = fetchFriends($currentUID);
-			
-			# If the message is success...
-			if($friendsFetched["MESSAGE"] == "SUCCESS") {
+			if($oceansFetched["MESSAGE"] == "SUCCESS") {
 				
 				# Return friends data
-				echo json_encode($friendsFetched['FRIENDS']);
+				echo json_encode($oceansFetched['oceans']);
 			}
 			# If attempt failed...
 			else {
 				# Error message
-				genericErrorFunction($friendsFetched["MESSAGE"]);
+				genericErrorFunction($oceansFetched["MESSAGE"]);
 			}
 		}
 		else {
@@ -209,47 +141,6 @@
 			$response = array("MESSAGE" => "IGNORED");
 			echo json_encode($response);
 		}
-	}
-	# REWRITE
-	function fillFriendRequestService() {
-		session_start();
-		if(isset($_SESSION['current'])) {
-			# Fetch required data
-			$currentUID = $_SESSION['current'];
-
-			# Launch data layer execution attempt
-			$requestsFetched = fetchRequests($currentUID);
-			
-			# If the message is success...
-			if($requestsFetched["MESSAGE"] == "SUCCESS") {
-				
-				# Return requests data
-				echo json_encode($requestsFetched['REQUESTS']);
-			}
-			# If attempt failed...
-			else {
-				# Error message
-				genericErrorFunction($requestsFetched["MESSAGE"]);
-			}
-		}
-		else {
-			session_destroy();
-			setcookie("PHPSESSID", "", time() - 1, "/", "", 0);
-			$response = array("MESSAGE" => "IGNORED");
-			echo json_encode($response);
-		}
-	}
-	# REWRITE
-	function fillTextboxRememberUsernameService() {
-		if(isset($_COOKIE['remember'])) {
-			$response = array("remember" => "SUCCESS",
-							  "username" => $_COOKIE['remember']);
-		}
-		else {
-			$response = array("remember" => "FAIL");
-		}
-
-		echo json_encode($response);
 	}
 	
 	function loginService() {
@@ -523,27 +414,27 @@
 			genericErrorFunction($verificationOutcome["MESSAGE"]);
 		}
 	}
-	# REWRITE
-	function searchFriendService() {
+
+	function bookmarkService() {
 		session_start();
 		if(isset($_SESSION['current'])) {
 			# Fetch required data
 			$currentUID = $_SESSION['current'];
-			$nameOrEmail = $_POST['key'];
+			$oceanID = $_POST['ocean'];
 
 			# Launch data layer execution attempt
-			$friendsFetched = searchFriends($currentUID, $nameOrEmail);
-			
+			$bookmarkOceanOutcome = bookmarkOcean($currentUID, $oceanID);
+
 			# If the message is success...
-			if($friendsFetched["MESSAGE"] == "SUCCESS") {
+			if($bookmarkOceanOutcome['MESSAGE'] == "SUCCESS") {
 				
-				# Return possible friends data
-				echo json_encode($friendsFetched['FRIENDS']);
+				# Return profile data
+				echo json_encode($bookmarkOceanOutcome);
 			}
 			# If attempt failed...
 			else {
 				# Error message
-				genericErrorFunction($friendsFetched["MESSAGE"]);
+				genericErrorFunction($bookmarkOceanOutcome["MESSAGE"]);
 			}
 		}
 		else {
@@ -553,37 +444,87 @@
 			echo json_encode($response);
 		}
 	}
-	# REWRITE
-	function sendFriendRequestService() {
+
+	function paintService() {
 		session_start();
 		if(isset($_SESSION['current'])) {
 			# Fetch required data
 			$currentUID = $_SESSION['current'];
-			$possibleFriendUser = $_POST['possible_Friend'];
+			$oceanID = $_POST['ocean'];
 
-			// Get the id of the new friend
-			$friendIDRetrival = getUserID($possibleFriendUser);
+			# Launch data layer execution attempt
+			$paintOceanOutcome = paintOcean($currentUID, $oceanID);
 
-			if($friendIDRetrival["MESSAGE"] == "SUCCESS") {
-
-				// Add the friend
-				$sendRequestOutcome = attemptCreateFriendRequest($currentUID, $friendIDRetrival["UID"]);
-
-				// If insertion was successful...
-				if($sendRequestOutcome["MESSAGE"] == "SUCCESS") {
-
-					$response = array("outcome" => "SUCCESS");
-
-					echo json_encode($response);
-				}
-				else {
-					genericErrorFunction($sendRequestOutcome["MESSAGE"]);
-				}
+			# If the message is success...
+			if($paintOceanOutcome['MESSAGE'] == "SUCCESS") {
+				
+				# Return profile data
+				echo json_encode($paintOceanOutcome);
 			}
-				// If id retrival fails...
+			# If attempt failed...
 			else {
-				// Error message
-				genericErrorFunction($friendIDRetrival["MESSAGE"]);
+				# Error message
+				genericErrorFunction($paintOceanOutcome["MESSAGE"]);
+			}
+		}
+		else {
+			session_destroy();
+			setcookie("PHPSESSID", "", time() - 1, "/", "", 0);
+			$response = array("MESSAGE" => "IGNORED");
+			echo json_encode($response);
+		}
+	}
+
+	function unbookmarkService() {
+		session_start();
+		if(isset($_SESSION['current'])) {
+			# Fetch required data
+			$currentUID = $_SESSION['current'];
+			$oceanID = $_POST['ocean'];
+
+			# Launch data layer execution attempt
+			$unbookmarkOceanOutcome = unbookmarkOcean($currentUID, $oceanID);
+
+			# If the message is success...
+			if($unbookmarkOceanOutcome['MESSAGE'] == "SUCCESS") {
+				
+				# Return profile data
+				echo json_encode($unbookmarkOceanOutcome);
+			}
+			# If attempt failed...
+			else {
+				# Error message
+				genericErrorFunction($unbookmarkOceanOutcome["MESSAGE"]);
+			}
+		}
+		else {
+			session_destroy();
+			setcookie("PHPSESSID", "", time() - 1, "/", "", 0);
+			$response = array("MESSAGE" => "IGNORED");
+			echo json_encode($response);
+		}
+	}
+
+	function unpaintService() {
+		session_start();
+		if(isset($_SESSION['current'])) {
+			# Fetch required data
+			$currentUID = $_SESSION['current'];
+			$oceanID = $_POST['ocean'];
+
+			# Launch data layer execution attempt
+			$unpaintOceanOutcome = unpaintOcean($currentUID, $oceanID);
+
+			# If the message is success...
+			if($unpaintOceanOutcome['MESSAGE'] == "SUCCESS") {
+				
+				# Return profile data
+				echo json_encode($unpaintOceanOutcome);
+			}
+			# If attempt failed...
+			else {
+				# Error message
+				genericErrorFunction($unpaintOceanOutcome["MESSAGE"]);
 			}
 		}
 		else {

@@ -260,3 +260,21 @@ div.chatHeader {
 	background-color: #fafafa;
 	margin-bottom: 0;
 }
+
+.noContent {
+	font-size: 18px;
+	padding-top: 50px;
+}
+
+#oceans {
+	text-align: center;
+}
+
+.oceanItem {
+	text-align: left;
+}
+
+.dateOcean {
+	color: #FFFFFF;
+	font-size: 12px;
+}

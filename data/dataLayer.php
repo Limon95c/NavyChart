@@ -24,44 +24,6 @@
 
 	# -------------- Services --------------
 
-	# REWRITE
-	# Attempt to add a friend
-	function addFriend($currentUID, $friendID) {
-
-		# Obtain null or actual reference of connection
-		$connection = databaseConnection();
-
-		# If connection exists...
-		if($connection != null) {
-
-			# Query forumlation
-			$sql = "INSERT INTO Friends (user1_ID, user2_ID)
-					VALUES ('$currentUID', '$friendID')";
-
-			# Query execution
-			$friendAdded = $connection -> query($sql);
-
-			# If frienship is created successfully...
-			if ($friendAdded === true) {
-
-				$response = array("MESSAGE" => "SUCCESS");
-				
-				# Cerrar la conexion a base de datos
-				$connection -> close();
-				# Regresar respuesta
-				return $response;
-			}
-			# Return an error message if database insertion failed
-			else {
-				return array("MESSAGE" => "500");
-			}
-		}
-		# Return an error message if connection is null
-		else {
-			return array("MESSAGE" => "500");
-		}
-	}
-
 	# Attempt to create an ocean
 	function attemptCreateOcean($content) {
 		# Obtain null or actual reference of connection
@@ -182,9 +144,8 @@
 		}
 	}
 
-	# REWRITE
-	# Attempt to create a friend request
-	function attemptCreateFriendRequest($currentUID, $possibleFriendID) {
+	# Bookmark an ocean
+	function bookmarkOcean($user_ID, $ocean_ID) {
 		# Obtain null or actual reference of connection
 		$connection = databaseConnection();
 
@@ -192,14 +153,14 @@
 		if($connection != null) {
 
 			# Query forumlation
-			$sql = "INSERT INTO Requests(sender_ID, response_ID)
-					VALUES ('$currentUID', '$possibleFriendID')";
+			$sql = "INSERT INTO Bookmarks(user_ID, ocean_ID)
+					VALUES ('$user_ID', '$ocean_ID');";
 
 			# Query execution
-			$requestCreated = $connection -> query($sql);
+			$result = $connection -> query($sql);
 
-			# If friend request is created successfully...
-			if ($requestCreated === true) {
+			# If user is created successfully...
+			if ($result === true) {
 
 				$response = array("MESSAGE" => "SUCCESS");
 				
@@ -219,8 +180,8 @@
 		}
 	}
 
-	# Bookmark an ocean
-	function bookmarkOcean($user_ID, $ocean_ID) {
+	# Unbookmark an ocean
+	function unbookmarkOcean($user_ID, $ocean_ID) {
 		# Obtain null or actual reference of connection
 		$connection = databaseConnection();
 
@@ -228,8 +189,44 @@
 		if($connection != null) {
 
 			# Query forumlation
-			$sql = "INSERT INTO Bookmarks(user_ID, ocean_ID)
-					VALUES ('$user_ID', '$ocean_ID');";
+			$sql = "DELETE FROM Bookmarks
+					WHERE user_ID = $user_ID AND ocean_ID = $ocean_ID";
+
+			# Query execution
+			$result = $connection -> query($sql);
+
+			# If user is created successfully...
+			if ($result === true) {
+
+				$response = array("MESSAGE" => "SUCCESS");
+				
+				# Cerrar la conexion a base de datos
+				$connection -> close();
+				# Regresar respuesta
+				return $response;
+			}
+			# Return an error message if database insertion failed
+			else {
+				return array("MESSAGE" => "500");
+			}
+		}
+		# Return an error message if connection is null
+		else {
+			return array("MESSAGE" => "500");
+		}
+	}
+
+	# Unbookmark an ocean
+	function unpaintOcean($user_ID, $ocean_ID) {
+		# Obtain null or actual reference of connection
+		$connection = databaseConnection();
+
+		# If connection exists...
+		if($connection != null) {
+
+			# Query forumlation
+			$sql = "DELETE FROM Painted
+					WHERE user_ID = $user_ID AND ocean_ID = $ocean_ID";
 
 			# Query execution
 			$result = $connection -> query($sql);
@@ -296,9 +293,8 @@
 		}
 	}
 
-	# REWRITE
-	# Attempt to fetch comments avaiable for a user
-	function fetchComments($currentUID) {
+	# Attempt to fetch oceans
+	function fetchOceans($currentUID, $section, $tags, $order) {
 		# Obtain null or actual reference of connection
 		$connection = databaseConnection();
 
@@ -306,151 +302,172 @@
 		if($connection != null) {
 
 			# Query forumlation
-			$sql = "SELECT fName, lName, username, email, content
-					FROM Comments AS C INNER JOIN Users AS U
-	                ON C.user_ID = U.ID
-					WHERE C.user_ID = $currentUID
-					OR C.user_ID IN (SELECT F.user1_ID
-					                 FROM Friends AS F
-					                 WHERE F.user2_ID = $currentUID
-					                 UNION
-					                 SELECT F.user2_ID
-					                 FROM Friends AS F
-					                 WHERE F.user1_ID = $currentUID)
-					ORDER BY C.ID";
+			$sql = "SELECT O.ID AS id, summary, timetag, COUNT(O.ID) AS paintNum
+			FROM Oceans AS O INNER JOIN Painted As P
+			ON O.ID = P.ocean_ID
+			GROUP BY O.ID
+			ORDER BY $order DESC";
 
 			# Query execution
 			$queryResult = $connection -> query($sql);
 
-			$comments = array();
+			$initialOceans = array();
 
 			# If information was fetch successfully...
 			if ($queryResult != null) {
 				if ($queryResult -> num_rows > 0) {
 
-					# Fetching various comments if any
+					# Fetching various oceans if any
 					while ($row = $queryResult -> fetch_assoc()) {
-				 		$comments[] = array("fName" => $row["fName"],
-				 							"lName" => $row["lName"],
-				 						    "username" => $row["username"],
-				 						    "email" => $row["email"],
-				 						    "content" => $row["content"]);
+						$initialOceans[] = array("id" => $row["id"],
+							"summary" => $row["summary"],
+							"timetag" => $row["timetag"],
+							"paintNum" => $row["paintNum"]);
 					}
 				}
 
-				$response = array("MESSAGE" => "SUCCESS",
-								  "COMMENTS" => $comments);
+				# Add the related tags
+				foreach ($initialOceans as &$ocean) {
 
-				# Cerrar la conexion a base de datos
-				$connection -> close();
-				# Regresar respuesta
-				return $response;
-			}
-			# Return an error message if query failed
-			else {
-				return array("MESSAGE" => "500");
-			}
-		}
-		# Return an error message if connection is null
-		else {
-			return array("MESSAGE" => "500");
-		}
-	}
+					$tagsArray = array();
+					$temp = $ocean["id"];
+					# Query forumlation
+					$tagsSql = "SELECT tag
+					FROM Oceans AS O INNER JOIN TagsToOceans AS TaTO INNER JOIN Tags As T
+					ON O.ID = TaTO.ocean_ID AND TaTO.tag_ID = T.ID
+					WHERE O.ID = $temp;";
 
-	# REWRITE
-	# Attempt to fetch the friend list of a user
-	function fetchFriends($currentUID) {
-		# Obtain null or actual reference of connection
-		$connection = databaseConnection();
+					# Query execution
+					$tagsResult = $connection -> query($tagsSql);
 
-		# If connection exists...
-		if($connection != null) {
+					if ($tagsResult != null) {
+						if ($tagsResult -> num_rows > 0) {
+							# Fetching various oceans if any
+							while ($row = $tagsResult -> fetch_assoc()) {
+								$tagsArray[] = $row["tag"];
+							}
+						}
+					}
 
-			# Query forumlation
-			$sql = "SELECT fName, lName, username, email
-					FROM Friends AS F INNER JOIN Users AS U
-	                ON F.user1_ID = U.ID
-					WHERE F.user2_ID = $currentUID
-					UNION
-					SELECT fName, lName, username, email
-					FROM Friends AS F INNER JOIN Users AS U
-	                ON F.user2_ID = U.ID
-					WHERE F.user1_ID = $currentUID
-					ORDER BY fName";
+					$ocean["tags"] = $tagsArray;
+				}
 
-			# Query execution
-			$queryResult = $connection -> query($sql);
+				if(!empty($tags)) {
+					# Filter by searched tags
+					$filteredOceans = $initialOceans;
 
-			$friends = array();
+					foreach ($tags as &$tagItem) {
+						$thisTagOceans = $filteredOceans;
+						$filteredOceans = array();
+						foreach ($thisTagOceans as &$ocean) {
+							if (in_array($tagItem, $ocean["tags"])) {
+								echo $ocean["tags"];
+								$filteredOceans[] = $ocean;
+							}
+						}
+					}
 
-			# If information was fetch successfully...
-			if ($queryResult != null) {
-				if ($queryResult -> num_rows > 0) {
+					$initialOceans = $filteredOceans;
+				}
 
-					# Fetching various friends if any
-					while ($row = $queryResult -> fetch_assoc()) {
-				 		$friends[] = array("fName" => $row["fName"],
-				 							"lName" => $row["lName"],
-				 						    "username" => $row["username"],
-				 						    "email" => $row["email"]);
+				# Add Bookmarked
+				foreach ($initialOceans as &$ocean) {
+
+					# Query forumlation
+					$temp = $ocean["id"];
+
+					$bookSql = "SELECT B.user_ID
+					FROM Oceans AS O INNER JOIN Bookmarks AS B
+					ON O.ID = B.ocean_ID
+					WHERE B.user_ID = $currentUID
+					AND $temp = O.ID";
+
+					# Query execution
+					$bookResult = $connection -> query($bookSql);
+
+					if ($bookResult != null) {
+						if ($bookResult -> num_rows > 0) {
+							$ocean["bookmarked"] = "true";
+						}
+						else {
+							$ocean["bookmarked"] = "false";
+						}
 					}
 				}
 
-				$response = array("MESSAGE" => "SUCCESS",
-								  "FRIENDS" => $friends);
+				# Add Painted
+				foreach ($initialOceans as &$ocean) {
 
-				# Cerrar la conexion a base de datos
-				$connection -> close();
-				# Regresar respuesta
-				return $response;
-			}
-			# Return an error message if query failed
-			else {
-				return array("MESSAGE" => "500");
-			}
-		}
-		# Return an error message if connection is null
-		else {
-			return array("MESSAGE" => "500");
-		}
-	}
+					# Query forumlation
+					$temp = $ocean["id"];
+					$paintSql = "SELECT P.user_ID
+					FROM Oceans AS O INNER JOIN Painted AS P
+					ON O.ID = P.ocean_ID
+					WHERE P.user_ID = $currentUID
+					AND $temp = O.ID";
 
-	# REWRITE
-	# Attempt to fetch friendship requests of a user
-	function fetchRequests($currentUID) {
-		# Obtain null or actual reference of connection
-		$connection = databaseConnection();
+					# Query execution
+					$paintResult = $connection -> query($paintSql);
 
-		# If connection exists...
-		if($connection != null) {
-
-			# Query forumlation
-			$sql = "SELECT R.ID, fName, lName, username, email
-					FROM Requests AS R INNER JOIN Users AS U
-	                ON R.sender_ID = U.ID
-					WHERE R.response_ID = $currentUID
-					ORDER BY R.ID";
-
-			# Query execution
-			$queryResult = $connection -> query($sql);
-
-			$requests = array();
-
-			# If information was fetch successfully...
-			if ($queryResult != null) {
-				if ($queryResult -> num_rows > 0) {
-
-					# Fetching various requests if any
-					while ($row = $queryResult -> fetch_assoc()) {
-				 		$requests[] = array("fName" => $row["fName"],
-				 							"lName" => $row["lName"],
-				 						    "username" => $row["username"],
-				 						    "email" => $row["email"]);
+					if ($paintResult != null) {
+						if ($paintResult -> num_rows > 0) {
+							$ocean["painted"] = "true";
+						}
+						else {
+							$ocean["painted"] = "false";
+						}
 					}
 				}
 
+				# Num messages
+				foreach ($initialOceans as &$ocean) {
+
+					# Query forumlation
+					$temp = $ocean["id"];
+
+					$msgSql = "SELECT COUNT(O.ID) AS num
+							   FROM Oceans AS O INNER JOIN Messages AS Mes
+							   ON O.ID = Mes.ocean_ID
+							   WHERE $temp = O.ID;";
+
+					# Query execution
+					$msgResult = $connection -> query($msgSql);
+
+					if ($msgResult != null) {
+						if ($msgResult -> num_rows > 0) {
+							$ocean["numMessages"] = "0";
+						}
+						else {
+							$ocean["numMessages"] = "0";
+						}
+					}
+					else {
+						$ocean["numMessages"] = "0";
+					}
+				}
+
+				$finalOceans = array();
+
+				if($section == "Bookmarked") {
+					foreach ($initialOceans as &$ocean) {
+						if($ocean["bookmarked"] == "true") {
+							$finalOceans[] = $ocean;
+						}
+					}
+				}
+				else if($section == "Painted") {
+					foreach ($initialOceans as &$ocean) {
+						if($ocean["painted"] == "true") {
+							$finalOceans[] = $ocean;
+						}
+					}
+				}
+				else {
+					$finalOceans = $initialOceans;
+				}
+
 				$response = array("MESSAGE" => "SUCCESS",
-								  "REQUESTS" => $requests);
+					"oceans" => $finalOceans);
 
 				# Cerrar la conexion a base de datos
 				$connection -> close();
@@ -781,150 +798,6 @@
 				$connection -> close();
 				# Regresar respuesta
 				return $response;
-			}
-		}
-		# Return an error message if connection is null
-		else {
-			return array("MESSAGE" => "500");
-		}
-	}
-
-	# REWRITE
-	# Attempt to remove a request from the database
-	function removeRequest($sender_ID, $response_ID) {
-		# Obtain null or actual reference of connection
-		$connection = databaseConnection();
-
-		# If connection exists...
-		if($connection != null) {
-
-			# Query forumlation
-			$sql = "DELETE FROM Requests
-					WHERE $sender_ID = sender_ID
-					AND $response_ID = response_ID";
-
-			# Query execution
-			$requestRemoval = $connection -> query($sql);
-
-			# If request was removed successfully...
-			if ($requestRemoval == true) {
-
-				$response = array("MESSAGE" => "SUCCESS");
-				
-				# Cerrar la conexion a base de datos
-				$connection -> close();
-				# Regresar respuesta
-				return $response;
-			}
-			# Return an error message if database deletion failed
-			else {
-				return array("MESSAGE" => "500");
-			}
-		}
-		# Return an error message if connection is null
-		else {
-			return array("MESSAGE" => "500");
-		}
-	}
-
-	# REWRITE
-	# Attempt to search for new friends
-	function searchFriends($currentUID, $nameOrEmail) {
-		# Obtain null or actual reference of connection
-		$connection = databaseConnection();
-
-		# If connection exists...
-		if($connection != null) {
-
-			# Query forumlation to find friends who have already sent you a request
-			$sql1 = "SELECT fName, lName, username, email, R.ID
-					FROM Users AS U INNER JOIN REQUESTS AS R
-					ON (U.ID = R.sender_ID AND R.response_ID = $currentUID)
-					WHERE U.ID NOT IN (SELECT F.user1_ID
-					                   FROM Friends AS F
-					                   WHERE F.user2_ID = $currentUID
-					                   UNION
-					                   SELECT F.user2_ID
-					                   FROM Friends AS F
-					                   WHERE F.user1_ID = $currentUID)
-					AND (username REGEXP '^$nameOrEmail'
-						 OR
-						 email REGEXP '^$nameOrEmail')
-					ORDER BY fName";
-
-			# Query forumlation to find friends who didn't send you a request
-			$sql2 = "SELECT fName, lName, username, email, R.ID
-					FROM Users AS U LEFT JOIN REQUESTS AS R
-					ON ($currentUID = R.sender_ID AND U.ID = R.response_ID)
-					WHERE U.ID NOT IN (SELECT F.user1_ID
-					                   FROM Friends AS F
-					                   WHERE F.user2_ID = $currentUID
-					                   UNION
-					                   SELECT F.user2_ID
-					                   FROM Friends AS F
-					                   WHERE F.user1_ID = $currentUID
-					                   UNION
-					                   SELECT R.sender_ID
-					                   FROM Requests AS R
-					                   WHERE R.response_ID = $currentUID)
-					AND (username REGEXP '^$nameOrEmail'
-						 OR
-						 email REGEXP '^$nameOrEmail')
-					AND U.ID != $currentUID
-					ORDER BY fName";
-
-			# Queries execution
-			$query1Result = $connection -> query($sql1);
-			$query2Result = $connection -> query($sql2);
-
-			$friends = array();
-
-			# If information was fetch successfully...
-			if ($query1Result != null && $query2Result != null) {
-				
-				if ($query1Result -> num_rows > 0) {
-					# Fetching various friends if any
-					while ($row = $query1Result -> fetch_assoc()) {
-						$friends[] = array("fName" => $row["fName"],
-				 						   "lName" => $row["lName"],
-  				 						   "username" => $row["username"],
-				 						   "email" => $row["email"],
-				 						   "request" => "answer");
-					}
-				}
-
-				if ($query2Result -> num_rows > 0) {
-
-					# Fetching various friends if any
-					while ($row = $query2Result -> fetch_assoc()) {
-						if($row["ID"] != "") {
-							$friends[] = array("fName" => $row["fName"],
-				 							   "lName" => $row["lName"],
-  				 						       "username" => $row["username"],
-				 						       "email" => $row["email"],
-				 						       "request" => "sent");
-						}
-						else {
-							$friends[] = array("fName" => $row["fName"],
-				 							   "lName" => $row["lName"],
-  				 						       "username" => $row["username"],
-				 						       "email" => $row["email"],
-				 						       "request" => "add");
-						}
-					}
-				}
-
-				$response = array("MESSAGE" => "SUCCESS",
-								  "FRIENDS" => $friends);
-
-				# Cerrar la conexion a base de datos
-				$connection -> close();
-				# Regresar respuesta
-				return $response;
-			}
-			# Return an error message if query failed
-			else {
-				return array("MESSAGE" => "500");
 			}
 		}
 		# Return an error message if connection is null
